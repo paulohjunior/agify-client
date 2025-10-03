@@ -1,56 +1,50 @@
 const https = require("https");
 
-let getResponse = "";
+const BASE_URL = "https://api.agify.io/?";
+const NAMES = ["victor", "milson", "gabriela", "patricia", "wagner", "brenda"];
 
-const doRequest = (country) => {
-  if (country) {
-    https
-      .get("https://api.agify.io/?name[]=victor&name[]=milson&name[]=gabriela&name[]=patricia&name[]=wagner&name[]=brenda&country_id=" + country, (res) => {
-        if (res.statusCode === 200) {
-          res.on("data", (d) => {
-            getResponse += d;
-          });
-          res.on("end", () => {
-            json = JSON.parse(getResponse);
-            for (let index = 0; index < json.length; index++) {
-              console.log("Nome:", json[index].name);
-              console.log("Idade média:", json[index].age);
-              console.log("Quantidade de registros", json[index].count);
-              console.log("-----------------------");
-            }
-          });
-        }
-      })
-      .on("error", (e) => {
-        console.error(e);
-      });
+function buildUrl(country) {
+  const queryNames = NAMES.map((name) => `name[]=${name}`).join("&");
+  const countryParam = country ? `&country_id=${country}` : "";
+  return `${BASE_URL}${queryNames}${countryParam}`;
+}
 
-  } else {
-  
-     https
-      .get("https://api.agify.io/?name[]=victor&name[]=milson&name[]=gabriela&name[]=patricia&name[]=wagner&name[]=brenda", (res) => {
-        if (res.statusCode === 200) {
-          res.on("data", (d) => {
-            getResponse += d;
-          });
-          res.on("end", () => {
-            json = JSON.parse(getResponse);
-            for (let index = 0; index < json.length; index++) {
-              console.log("Nome:", json[index].name);
-              console.log("Idade média:", json[index].age);
-              console.log("Quantidade de registros", json[index].count);
-              console.log("-----------------------");
-            }
-          });
-        }
-      })
-      .on("error", (e) => {
-        console.error(e);
-      });
-
-
+function printData(data) {
+  for (let index = 0; index < data.length; index++) {
+    console.log("Nome:", data[index].name);
+    console.log("Idade média:", data[index].age);
+    console.log("Quantidade de registros:", data[index].count);
+    console.log("-----------------------");
   }
-};
-  
+}
+
+function doRequest(country) {
+  const url = buildUrl(country);
+
+  https
+    .get(url, (res) => {
+      if (res.statusCode === 200) {
+        let body = "";
+
+        res.on("data", (chunk) => {
+          body += chunk;
+        });
+
+        res.on("end", () => {
+          try {
+            const json = JSON.parse(body);
+            printData(json);
+          } catch (err) {
+            console.error("Erro ao parsear resposta:", err.message);
+          }
+        });
+      } else {
+        console.error("Erro na requisição. Status:", res.statusCode);
+      }
+    })
+    .on("error", (e) => {
+      console.error("Erro de conexão:", e.message);
+    });
+}
 
 doRequest("BR");
