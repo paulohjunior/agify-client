@@ -1,7 +1,7 @@
 const buildUrl = require("../utils/buildUrl");
 
-async function doRequest(country) {
-  const url = buildUrl(country);
+async function doRequest(names, country) {
+  const url = buildUrl(names, country);
 
   try {
     const res = await fetch(url);
@@ -11,7 +11,7 @@ async function doRequest(country) {
     }
 
     const data = await res.json();
-    return data;
+    return data; // só retorna dados crus
   } catch (err) {
     console.error("Erro na requisição:", err.message);
     return null;
