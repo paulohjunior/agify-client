@@ -1,9 +1,5 @@
-const doRequest = require("./api/request");
-const printData = require("./utils/printData");
+const main = require("./main");
 
 const NAMES = ["victor", "milson", "gabriela", "patricia", "wagner", "brenda"];
 
-(async () => {
-  const data = await doRequest(NAMES, "BR");
-  printData(data);
-})();
+main(NAMES, "BR");

@@ -11,7 +11,7 @@ async function doRequest(names, country) {
     }
 
     const data = await res.json();
-    return data; // só retorna dados crus
+    return data;
   } catch (err) {
     console.error("Erro na requisição:", err.message);
     return null;
