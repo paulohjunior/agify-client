@@ -1,3 +1,7 @@
 const doRequest = require("./api/request");
+const printData = require("./utils/printData");
 
-doRequest("BR");
+(async () => {
+  const data = await doRequest("BR");
+  printData(data);
+})();

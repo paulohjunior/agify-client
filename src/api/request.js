@@ -1,34 +1,21 @@
-const https = require("https");
 const buildUrl = require("../utils/buildUrl");
-const printData = require("../utils/printData");
 
-function doRequest(country) {
+async function doRequest(country) {
   const url = buildUrl(country);
 
-  https
-    .get(url, (res) => {
-      if (res.statusCode === 200) {
-        let body = "";
+  try {
+    const res = await fetch(url);
 
-        res.on("data", (chunk) => {
-          body += chunk;
-        });
+    if (!res.ok) {
+      throw new Error(`Request failed with status ${res.status}`);
+    }
 
-        res.on("end", () => {
-          try {
-            const json = JSON.parse(body);
-            printData(json);
-          } catch (err) {
-            console.error("Erro ao parsear resposta:", err.message);
-          }
-        });
-      } else {
-        console.error("Erro na requisição. Status:", res.statusCode);
-      }
-    })
-    .on("error", (e) => {
-      console.error("Erro de conexão:", e.message);
-    });
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error("Erro na requisição:", err.message);
+    return null;
+  }
 }
 
 module.exports = doRequest;
