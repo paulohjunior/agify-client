@@ -4,7 +4,6 @@ describe("printData", () => {
   it("should print formatted data", () => {
     const mockData = [{ name: "victor", age: 48, count: 857 }];
 
-    // Espionar console.log
     const logSpy = jest.spyOn(console, "log").mockImplementation(() => {});
 
     printData(mockData);

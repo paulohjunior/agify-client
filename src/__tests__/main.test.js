@@ -8,8 +8,10 @@ const main = require("../main");                     // importa depois dos mocks
 describe("main", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.spyOn(console, "log").mockImplementation(() => {});
+    jest.spyOn(console, "error").mockImplementation(() => {});
   });
-
+  
   it("should fetch and print data", async () => {
     const mockData = [{ name: "victor", age: 48, count: 857 }];
     doRequest.mockResolvedValue(mockData);
