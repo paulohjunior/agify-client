@@ -1,9 +1,9 @@
-jest.mock("../api/request", () => jest.fn());        // se main.js está em src/
+jest.mock("../api/request", () => jest.fn());
 jest.mock("../utils/printData", () => jest.fn());
 
-const doRequest = require("../api/request");         // mesmo caminho usado no mock
+const doRequest = require("../api/request");
 const printData = require("../utils/printData");
-const main = require("../main");                     // importa depois dos mocks
+const main = require("../main");
 
 describe("main", () => {
   beforeEach(() => {
@@ -11,7 +11,7 @@ describe("main", () => {
     jest.spyOn(console, "log").mockImplementation(() => {});
     jest.spyOn(console, "error").mockImplementation(() => {});
   });
-  
+
   it("should fetch and print data", async () => {
     const mockData = [{ name: "victor", age: 48, count: 857 }];
     doRequest.mockResolvedValue(mockData);
